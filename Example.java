@@ -27,13 +27,15 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     DrawPanel drawPanel;
     Graphics page;
     MultiGraph finalGraph;
+    Point view = new Point(0,0);
+    Point mousePoint = new Point(0,0);
     
   //---------Generate Display points------------
     public ArrayList<Point> generateGraphPoints(double sineFreq)
     {
         ArrayList<Point> out = new ArrayList<Point>();
         for(double x = -5.0; x< 5.0; x+=0.05)
-	  out.add(new Point(x,3*Math.sin(sineFreq*x)));
+	  out.add(new Point(x-view.x,3*Math.sin(sineFreq*(x-view.x))));
         return out;
     }
     
@@ -65,16 +67,19 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
         frame.addKeyListener ( this ) ;
         
         //--------Generate Graphs and add them to list-----------
-        ArrayList<Graph> graphs = new ArrayList<Graph>();
+        generateGraphs();
+        
+
+    }
+    
+    public void generateGraphs() {
+	ArrayList<Graph> graphs = new ArrayList<Graph>();
         graphs.add((new Graph(generateGraphPoints(0.5))).setPointSize(2).setColor(Color.BLACK));
         graphs.add((new Graph(generateGraphPoints(0.8))).setPointSize(4));
         graphs.add(new Graph(generateGraphPoints(1.0)));
         graphs.add(new Graph(generateGraphPoints(2.0)));
-        
-//        ----------Make Plotting object---------------
+        //----------Make Plotting object---------------
         finalGraph = new MultiGraph(graphs);
-        
-
     }
 
     /*----------------Nested class defining object to be painted to screen.--------------------
@@ -89,6 +94,7 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
             page.fillRect(0,0,width,height);
             
             //------Plot Command-------
+            finalGraph.findBounds();
             finalGraph.printGraph(page,width,height);
         }
     }
@@ -114,13 +120,16 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     public void mousePressed( MouseEvent e ) {  // called after a button is pressed down
         int xP=e.getX();
         int yP=e.getY();
-        frame.repaint();
+        mousePoint = new Point(xP,yP);
     }
     public void mouseReleased( MouseEvent e ) {}  // called after a button is released
     public void mouseMoved( MouseEvent e )    {}  // called during motion when no buttons are down
     public void mouseDragged( MouseEvent e )  {   // called during motion with buttons down
         int xP=e.getX();
         int yP=e.getY();
+        view.x += (xP-mousePoint.x)*0.1;
+	mousePoint = new Point(xP,yP);
+	generateGraphs();
 	frame.repaint();
     }
  
