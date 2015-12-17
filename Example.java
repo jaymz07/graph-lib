@@ -33,7 +33,7 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     {
         ArrayList<Point> out = new ArrayList<Point>();
         for(double x = -5.0; x< 5.0; x+=0.05)
-	  out.add(new Point(x,Math.sin(sineFreq*x)));
+	  out.add(new Point(x,3*Math.sin(sineFreq*x)));
         return out;
     }
     
@@ -64,13 +64,14 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
         frame.addMouseMotionListener( this );
         frame.addKeyListener ( this ) ;
         
-        //Generate Graphs and add them to list
+        //--------Generate Graphs and add them to list-----------
         ArrayList<Graph> graphs = new ArrayList<Graph>();
         graphs.add((new Graph(generateGraphPoints(0.5))).setPointSize(2).setColor(Color.BLACK));
         graphs.add((new Graph(generateGraphPoints(0.8))).setPointSize(4));
         graphs.add(new Graph(generateGraphPoints(1.0)));
         graphs.add(new Graph(generateGraphPoints(2.0)));
         
+//        ----------Make Plotting object---------------
         finalGraph = new MultiGraph(graphs);
         
 
@@ -83,9 +84,11 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
             page = g;
             //page = iOut.getGraphics();
 
+            //White background
             page.setColor(Color.WHITE);
             page.fillRect(0,0,width,height);
             
+            //------Plot Command-------
             finalGraph.printGraph(page,width,height);
         }
     }
