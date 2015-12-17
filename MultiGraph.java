@@ -11,7 +11,7 @@ public class MultiGraph
     public ArrayList<ArrayList<Point>> 	sPoints = null;
     public int pSize=1;
     public double minX, minY, maxX, maxY;
-    public double tickIncrement = 0.05;
+    public double tickIncrement = 0.1;
 
     private double rangeX=0, rangeY=0, ppuX=0, ppuY=0;
     private Graphics page;
@@ -23,21 +23,7 @@ public class MultiGraph
     public MultiGraph(ArrayList<Graph> graphList) {
         graphs=graphList;
 
-        //Find bounds of data and set that as default plot range
-        minX=graphs.get(0).data.get(0).getX();
-        minY=graphs.get(0).data.get(0).getY();
-        maxX=minX;
-        maxY=minY;
-
-        for(int i=0; i<graphs.size(); i++) {
-            ArrayList<Point> graphData = graphs.get(i).data;
-            for(int j=0; j<graphData.size(); j++) {
-                minX=Math.min(minX,graphData.get(j).x);
-                minY=Math.min(minY,graphData.get(j).y);
-                maxX=Math.max(maxX,graphData.get(j).x);
-                maxY=Math.max(maxY,graphData.get(j).y);
-            }
-        }
+        findBounds();
     }
 
     /* public MultiGraph(ArrayList<ArrayList<Point>> a, int w, int h)
@@ -69,6 +55,24 @@ public class MultiGraph
         minY = min_Y;
         sPoints = null;
         return this;
+    }
+    
+    public void findBounds() {
+      //Find bounds of data and set that as default plot range
+        minX=graphs.get(0).data.get(0).getX();
+        minY=graphs.get(0).data.get(0).getY();
+        maxX=minX;
+        maxY=minY;
+
+        for(int i=0; i<graphs.size(); i++) {
+            ArrayList<Point> graphData = graphs.get(i).data;
+            for(int j=0; j<graphData.size(); j++) {
+                minX=Math.min(minX,graphData.get(j).x);
+                minY=Math.min(minY,graphData.get(j).y);
+                maxX=Math.max(maxX,graphData.get(j).x);
+                maxY=Math.max(maxY,graphData.get(j).y);
+            }
+        }
     }
 
     public void setColors() {
@@ -182,7 +186,7 @@ public class MultiGraph
         }
         return out;
     }
-
+    public String dispNum(double num, int digits) { return ((int)(num*Math.pow(10,digits)))/Math.pow(10.0,digits) + ""; }
     public void drawAxes() {
         int tickWidth = 10;
         page.setColor(Color.BLACK);
@@ -191,27 +195,10 @@ public class MultiGraph
             Point a = scrPoint(new Point(0,maxY));
             Point b = scrPoint(new Point(0,minY));
             page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
-            ArrayList<Point> scrPoints = new ArrayList<Point>();
-            for(double tick : generateTickLocs(Axis.X) ) {
-		Point coordPoint = scrPoint(new Point(tick,0));
-		coordPoint.y += tickWidth;
-		scrPoints.add(coordPoint);
-		coordPoint = scrPoint(new Point(tick,0));
-		coordPoint.y -= tickWidth;
-		scrPoints.add(coordPoint);
-            }
-            for(int i =0; i<scrPoints.size(); i+=2) {
-		Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
-		page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
-	    }
-        }
-        if(minY<0&&maxY>0)
-        {
-            Point a = scrPoint(new Point(maxX,0));
-            Point b = scrPoint(new Point(minX,0));
-            page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
+	    
 	    ArrayList<Point> scrPoints = new ArrayList<Point>();
-	    for(double tick : generateTickLocs(Axis.Y) ) {
+	    ArrayList<Double> vals = generateTickLocs(Axis.Y);
+	    for(double tick :  vals) {
 		Point coordPoint = scrPoint(new Point(0,tick));
 		coordPoint.x += tickWidth;
 		scrPoints.add(coordPoint);
@@ -222,6 +209,29 @@ public class MultiGraph
             for(int i =0; i<scrPoints.size(); i+=2) {
 		Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
 		page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
+		page.drawString(dispNum(vals.get(i/2),2),(int)p1.getX() + tickWidth,(int)p1.getY());
+	    }
+        }
+        if(minY<0&&maxY>0)
+        {
+            Point a = scrPoint(new Point(maxX,0));
+            Point b = scrPoint(new Point(minX,0));
+            page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
+	    
+	    ArrayList<Point> scrPoints = new ArrayList<Point>();
+	    ArrayList<Double> vals = generateTickLocs(Axis.X);
+            for(double tick : vals ) {
+		Point coordPoint = scrPoint(new Point(tick,0));
+		coordPoint.y += tickWidth;
+		scrPoints.add(coordPoint);
+		coordPoint = scrPoint(new Point(tick,0));
+		coordPoint.y -= tickWidth;
+		scrPoints.add(coordPoint);
+            }
+            for(int i =0; i<scrPoints.size(); i+=2) {
+		Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
+		page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
+		page.drawString(dispNum(vals.get(i/2),2),(int)p1.getX(),(int)p1.getY() + tickWidth);
 	    }
         }
     }
