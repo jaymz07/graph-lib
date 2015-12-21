@@ -1,8 +1,4 @@
-/* Java Program for generating analog X,Y signals for a laser projector using the analog soundcard output.
- * Drawing on graphical window reflects the laser output.
- * This class defines a window, gets some points from mouse input and passes these points to a seperate
- * thread defined by LaserOutputThread.java, which handles all audio output.
- */
+//Example of using the MultiGraph class for plotting data.
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,40 +13,39 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class Example implements MouseListener, MouseMotionListener, KeyListener {
-    
-  //-------------------Main Program Parameters-----------------------
+
+    //-------------------Main Program Parameters-----------------------
     //Window settings
     int width = 500, height = 500;
-    
-  //----------------------Some global constants-----------------------    
+
+    //----------------------Some global constants-----------------------
     JFrame frame;
     DrawPanel drawPanel;
     Graphics page;
     MultiGraph finalGraph;
     Point view = new Point(0,0);
     Point mousePoint = new Point(0,0);
-    
-  //---------Generate Display points------------
+
+    //---------Generate Display points------------
     public ArrayList<Point> generateGraphPoints(double sineFreq)
     {
         ArrayList<Point> out = new ArrayList<Point>();
-        for(double x = -5.0; x< 5.0; x+=0.05)
-	  out.add(new Point(x-view.x,3*Math.sin(sineFreq*(x-view.x))));
+        for(double x = -6.0; x< 6.0; x+=0.05)
+            out.add(new Point(x-view.x,Math.sin(sineFreq*(x-view.x))));
         return out;
     }
-    
-  /*----------Main function. Calls constructor of whole class-----------*/
+
+    /*----------Main function. Calls constructor of whole class-----------*/
     public static void main(String[] args) {
         for(String s : args)
             System.out.println(s);
         (new Example()).run() ;
     }
-    
+
     public void run() {
 
         /*---------Make window-----------*/
-        frame = new JFrame("Tunneling Demo");
-	
+        frame = new JFrame("Plot Example");
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setSize(width,height);
@@ -65,15 +60,13 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
         frame.addMouseListener(this);
         frame.addMouseMotionListener( this );
         frame.addKeyListener ( this ) ;
-        
-        //--------Generate Graphs and add them to list-----------
-        generateGraphs();
-        
 
+        //--------Generate Graphs and make object-----------
+        generateGraphs();
     }
-    
+
     public void generateGraphs() {
-	ArrayList<Graph> graphs = new ArrayList<Graph>();
+        ArrayList<Graph> graphs = new ArrayList<Graph>();
         graphs.add((new Graph(generateGraphPoints(0.5))).setPointSize(2).setColor(Color.BLACK));
         graphs.add((new Graph(generateGraphPoints(0.8))).setPointSize(4));
         graphs.add(new Graph(generateGraphPoints(1.0)));
@@ -87,13 +80,12 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     class DrawPanel extends JPanel {
         public void paintComponent(Graphics g) {
             page = g;
-            //page = iOut.getGraphics();
 
-            //White background
+            //Make White background
             page.setColor(Color.WHITE);
             page.fillRect(0,0,width,height);
-            
-            //------Plot Command-------
+
+            //------Plot graph object-------
             finalGraph.findBounds();
             finalGraph.printGraph(page,width,height);
         }
@@ -106,7 +98,6 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
         //System.out.println("KEY");
         if(e.getKeyCode()== KeyEvent.VK_C) {
         }
-
         frame.repaint();
     }
     public void keyReleased ( KeyEvent e ) {}
@@ -127,12 +118,12 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     public void mouseDragged( MouseEvent e )  {   // called during motion with buttons down
         int xP=e.getX();
         int yP=e.getY();
-        view.x += (xP-mousePoint.x)*0.1;
-	mousePoint = new Point(xP,yP);
-	generateGraphs();
-	frame.repaint();
+        view.x += (xP-mousePoint.x)*0.02;
+        mousePoint = new Point(xP,yP);
+        generateGraphs();
+        frame.repaint();
     }
- 
+
 }
 
 

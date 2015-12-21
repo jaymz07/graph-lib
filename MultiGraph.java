@@ -158,7 +158,7 @@ public class MultiGraph
         Color c = Color.getHSBColor(val,1.0f,0.75f);
         return new Color(c.getRGB());
     }
-    private ArrayList<Double> generateTickLocs(Axis a) {
+    private ArrayList<Double> generateTickLocs(Axis a, double tickInc) {
         ArrayList<Double> out = new ArrayList<Double>();
 
         int numDecPlaces = 0;
@@ -179,8 +179,12 @@ public class MultiGraph
             break;
         }
         double tenbase = Math.pow(10.0,numDecPlaces);
-        for(double tick=0; tick<=1.0; tick+=tickIncrement) {
-            double val = tenbase*tick*10 + (int)(lower/tenbase)*tenbase;
+        for(double tick=0; tick<=1.0; tick+=tickInc) {
+            double val = tenbase*tick*10;
+	    if(lower >= 0)
+	      val += (int)(lower/tenbase)*tenbase;
+	    else
+	      val += ((int)(lower/tenbase) - 1)*tenbase;
             if(val >=lower && val <= upper)
                 out.add(val);
         }
@@ -197,7 +201,9 @@ public class MultiGraph
             page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
 	    
 	    ArrayList<Point> scrPoints = new ArrayList<Point>();
-	    ArrayList<Double> vals = generateTickLocs(Axis.Y);
+	    ArrayList<Double> vals = generateTickLocs(Axis.Y,tickIncrement);
+	    if(vals.size() < 3)
+	      vals = generateTickLocs(Axis.Y,tickIncrement/4);
 	    for(double tick :  vals) {
 		Point coordPoint = scrPoint(new Point(0,tick));
 		coordPoint.x += tickWidth;
@@ -219,7 +225,9 @@ public class MultiGraph
             page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
 	    
 	    ArrayList<Point> scrPoints = new ArrayList<Point>();
-	    ArrayList<Double> vals = generateTickLocs(Axis.X);
+	    ArrayList<Double> vals = generateTickLocs(Axis.X,tickIncrement);
+	    if(vals.size() < 3)
+	      vals = generateTickLocs(Axis.X,tickIncrement/4);
             for(double tick : vals ) {
 		Point coordPoint = scrPoint(new Point(tick,0));
 		coordPoint.y += tickWidth;
