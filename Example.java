@@ -1,4 +1,4 @@
-//Example of using the MultiGraph class for plotting data.
+/*Example of using the MultiGraph class for plotting data.*/
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,36 +6,32 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
 import java.io.*;
-import java.net.*;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class Example implements MouseListener, MouseMotionListener, KeyListener {
 
-    //-------------------Main Program Parameters-----------------------
-    //Window settings
+//------------Window settings------------------------
     int width = 500, height = 500;
-
-    //----------------------Some global constants-----------------------
+    
+//----------------------Some global constants-----------------------
+    //Graph object:
+    MultiGraph finalGraph;
+    
     JFrame frame;
     DrawPanel drawPanel;
     Graphics page;
-    MultiGraph finalGraph;
     Point view = new Point(0,0);
     Point mousePoint = new Point(0,0);
 
-    //---------Generate Display points------------
+//---------Generate Display points------------
     public ArrayList<Point> generateGraphPoints(double sineFreq)
     {
         ArrayList<Point> out = new ArrayList<Point>();
         for(double x = -6.0; x< 6.0; x+=0.05)
-            out.add(new Point(x-view.x,Math.sin(sineFreq*(x-view.x))));
+            out.add(new Point(x-view.x,0.001*Math.sin(sineFreq*(x-view.x))));
         return out;
     }
 
-    /*----------Main function. Calls constructor of whole class-----------*/
+/*----------Main function. Calls constructor of whole class-----------*/
     public static void main(String[] args) {
         for(String s : args)
             System.out.println(s);
@@ -43,7 +39,6 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     }
 
     public void run() {
-
         /*---------Make window-----------*/
         frame = new JFrame("Plot Example");
         frame.setVisible(true);
@@ -65,17 +60,18 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
         generateGraphs();
     }
 
+//------------Make individual plots and add them to plot object
     public void generateGraphs() {
         ArrayList<Graph> graphs = new ArrayList<Graph>();
-        graphs.add((new Graph(generateGraphPoints(0.5))).setPointSize(2).setColor(Color.BLACK));
-        graphs.add((new Graph(generateGraphPoints(0.8))).setPointSize(4));
-        graphs.add(new Graph(generateGraphPoints(1.0)));
-        graphs.add(new Graph(generateGraphPoints(2.0)));
+        graphs.add( (new Graph(generateGraphPoints(0.5))).setPointSize(2).setColor(Color.BLACK).setTitle("A sine Graph!") 	);
+        graphs.add( (new Graph(generateGraphPoints(0.8))).setPointSize(4).setTitle("A sine Graph!") 				);
+        graphs.add(  new Graph(generateGraphPoints(1.0)).setTitle("A sine Graph!") 						);
+        graphs.add(  new Graph(generateGraphPoints(2.0)).setTitle("A sine Graph!")						);
         //----------Make Plotting object---------------
         finalGraph = new MultiGraph(graphs);
     }
 
-    /*----------------Nested class defining object to be painted to screen.--------------------
+/*----------------Nested class defining object to be painted to screen.--------------------
     	  Simply overrides paintComponent() defined in JPanel*/
     class DrawPanel extends JPanel {
         public void paintComponent(Graphics g) {
@@ -91,18 +87,16 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
         }
     }
 
-    /*----------Keyboard Input. Event generated function calls.----------------------*/
+/*----------Keyboard Input. Event generated function calls.----------------------*/
 
     public void keyTyped ( KeyEvent e ) { }
     public void keyPressed ( KeyEvent e) {
-        //System.out.println("KEY");
-        if(e.getKeyCode()== KeyEvent.VK_C) {
-        }
+        if(e.getKeyCode()== KeyEvent.VK_R) { view = new Point(0,0); }
         frame.repaint();
     }
     public void keyReleased ( KeyEvent e ) {}
 
-    /*-----------Mouse Input. Event generated function calls------------------------*/
+/*-----------Mouse Input. Event generated function calls------------------------*/
     public void mouseEntered( MouseEvent e ) {
         // called when the pointer enters the applet's rectangular area
     }

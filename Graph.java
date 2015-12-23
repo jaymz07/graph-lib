@@ -26,12 +26,17 @@ public class Graph {
     pointSize = ptSize;
     color = ptColor;
   }
+//-------Object builder patterns------------
   public Graph setPointSize(int ptSize) {
     pointSize = ptSize;
     return this;
   }
   public Graph setColor(Color clr) {
     color = clr;
+    return this;
+  }
+  public Graph setTitle(String titleString) {
+    title=titleString;
     return this;
   }
 }
