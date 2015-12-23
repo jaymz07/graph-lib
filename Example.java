@@ -82,7 +82,6 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
             page.fillRect(0,0,width,height);
 
             //------Plot graph object-------
-            finalGraph.findBounds();
             finalGraph.printGraph(page,width,height);
         }
     }
