@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.applet.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class MultiGraph
 {
@@ -48,9 +49,9 @@ public class MultiGraph
         sPoints = null;
         return this;
     }
-    
+
     public void findBounds() {
-      //Find bounds of data and set that as default plot range
+        //Find bounds of data and set that as default plot range
         minX=graphs.get(0).data.get(0).getX();
         minY=graphs.get(0).data.get(0).getY();
         maxX=minX;
@@ -131,7 +132,7 @@ public class MultiGraph
         }
 
         drawAxes();
-	drawLegend();
+        drawLegend();
     }
 
     private void setPlotParams() {
@@ -172,25 +173,25 @@ public class MultiGraph
             break;
         }
         if(upper-lower < 1)
-	  numDecPlaces --;
+            numDecPlaces --;
         double tenbase = Math.pow(10.0,numDecPlaces);
         for(double tick=0; tick<=1.0; tick+=tickInc) {
             double val = tenbase*tick*10;
-	    if(lower >= 0)
-	      val += (int)(lower/tenbase)*tenbase;
-	    else
-	      val += ((int)(lower/tenbase) - 1)*tenbase;
+            if(lower >= 0)
+                val += (int)(lower/tenbase)*tenbase;
+            else
+                val += ((int)(lower/tenbase) - 1)*tenbase;
             if(val >=lower && val <= upper)
                 out.add(val);
         }
         //System.out.println(numDecPlaces +"");
         return out;
     }
-    public String dispNum(double num, int digits) { 
-      //return ((int)(num*Math.pow(10,digits)))/Math.pow(10.0,digits) + ""; 
-      if(Math.abs(num) < Math.pow(10,-digits+1))
-	return String.format("%."+digits+"e%n",num);
-      return String.format("%."+digits+"f%n",num);
+    public String dispNum(double num, int digits) {
+        //return ((int)(num*Math.pow(10,digits)))/Math.pow(10.0,digits) + "";
+        if(Math.abs(num) < Math.pow(10,-digits+1))
+            return String.format("%."+digits+"e%n",num);
+        return String.format("%."+digits+"f%n",num);
     }
     public void drawAxes() {
         int tickWidth = 10;
@@ -200,70 +201,99 @@ public class MultiGraph
             Point a = scrPoint(new Point(0,maxY));
             Point b = scrPoint(new Point(0,minY));
             page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
-	    
-	    ArrayList<Point> scrPoints = new ArrayList<Point>();
-	    ArrayList<Double> vals = generateTickLocs(Axis.Y,tickIncrement);
-	    if(vals.size() < 3)
-	      vals = generateTickLocs(Axis.Y,tickIncrement/4);
-	    for(double tick :  vals) {
-		Point coordPoint = scrPoint(new Point(0,tick));
-		coordPoint.x += tickWidth;
-		scrPoints.add(coordPoint);
-		coordPoint = scrPoint(new Point(0,tick));
-		coordPoint.x -= tickWidth;
-		scrPoints.add(coordPoint);
+
+            ArrayList<Point> scrPoints = new ArrayList<Point>();
+            ArrayList<Double> vals = generateTickLocs(Axis.Y,tickIncrement);
+            if(vals.size() < 3)
+                vals = generateTickLocs(Axis.Y,tickIncrement/4);
+            for(double tick :  vals) {
+                Point coordPoint = scrPoint(new Point(0,tick));
+                coordPoint.x += tickWidth;
+                scrPoints.add(coordPoint);
+                coordPoint = scrPoint(new Point(0,tick));
+                coordPoint.x -= tickWidth;
+                scrPoints.add(coordPoint);
             }
             for(int i =0; i<scrPoints.size(); i+=2) {
-		Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
-		page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
-		page.drawString(dispNum(vals.get(i/2),displayDigits),(int)p1.getX() + tickWidth,(int)p1.getY());
-	    }
+                Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
+                page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
+                page.drawString(dispNum(vals.get(i/2),displayDigits),(int)p1.getX() + tickWidth,(int)p1.getY());
+            }
         }
         if(minY<0&&maxY>0)
         {
             Point a = scrPoint(new Point(maxX,0));
             Point b = scrPoint(new Point(minX,0));
             page.drawLine((int)a.getX(),(int)a.getY(),(int)b.getX(),(int)b.getY());
-	    
-	    ArrayList<Point> scrPoints = new ArrayList<Point>();
-	    ArrayList<Double> vals = generateTickLocs(Axis.X,tickIncrement);
-	    if(vals.size() < 3)
-	      vals = generateTickLocs(Axis.X,tickIncrement/4);
+
+            ArrayList<Point> scrPoints = new ArrayList<Point>();
+            ArrayList<Double> vals = generateTickLocs(Axis.X,tickIncrement);
+            if(vals.size() < 3)
+                vals = generateTickLocs(Axis.X,tickIncrement/4);
             for(double tick : vals ) {
-		Point coordPoint = scrPoint(new Point(tick,0));
-		coordPoint.y += tickWidth;
-		scrPoints.add(coordPoint);
-		coordPoint = scrPoint(new Point(tick,0));
-		coordPoint.y -= tickWidth;
-		scrPoints.add(coordPoint);
+                Point coordPoint = scrPoint(new Point(tick,0));
+                coordPoint.y += tickWidth;
+                scrPoints.add(coordPoint);
+                coordPoint = scrPoint(new Point(tick,0));
+                coordPoint.y -= tickWidth;
+                scrPoints.add(coordPoint);
             }
             for(int i =0; i<scrPoints.size(); i+=2) {
-		Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
-		page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
-		page.drawString(dispNum(vals.get(i/2),displayDigits),(int)p1.getX(),(int)p1.getY() + tickWidth);
-	    }
+                Point p1 = scrPoints.get(i), p2 = scrPoints.get(i+1);
+                page.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
+                page.drawString(dispNum(vals.get(i/2),displayDigits),(int)p1.getX(),(int)p1.getY() + tickWidth);
+            }
         }
     }
-    
+
     public void drawLegend() {
-      double width = 0.0, height = 0.0;
-      FontMetrics font = page.getFontMetrics();
-      for(int i =0;i<graphs.size();i++) {
-	width = Math.max(width, font.getStringBounds(graphs.get(i).title,page).getWidth());
-	height = font.getStringBounds(graphs.get(i).title,page).getHeight();
-      }
-      height += 7;
-      int xPos = (int)(0.9*WIDTH), yPos = (int)(0.1*HEIGHT);
-      page.setColor(Color.WHITE);
-      page.fillRect(xPos - (int)width - 30,yPos,(int)width + 30,(int)height* (graphs.size()+1));
-      page.setColor(Color.BLACK);
-      page.drawRect(xPos - (int)width - 30,yPos,(int)width + 30,(int)height* (graphs.size()+1));
-      for(int i =0;i<graphs.size();i++) {
-	page.setColor(colors.get(i));
-	page.drawLine(xPos - (int)width - 30 + 5, yPos + 7 + (int)(height*(i+0.5)), xPos - (int)width - 5, yPos + 7 + (int)(height*(i+0.5)));
-	page.setColor(Color.BLACK);
-	page.drawString(graphs.get(i).title, xPos - (int)width, yPos + 7 + (int)height*(i+1));
-      }
+        double width = 0.0, height = 0.0;
+        FontMetrics font = page.getFontMetrics();
+        for(int i =0; i<graphs.size(); i++) {
+            width = Math.max(width, font.getStringBounds(graphs.get(i).title,page).getWidth());
+            height = font.getStringBounds(graphs.get(i).title,page).getHeight();
+        }
+        height += 7;
+        int xPos = (int)(0.9*WIDTH), yPos = (int)(0.1*HEIGHT);
+        page.setColor(Color.WHITE);
+        page.fillRect(xPos - (int)width - 30,yPos,(int)width + 30,(int)height* (graphs.size()+1));
+        page.setColor(Color.BLACK);
+        page.drawRect(xPos - (int)width - 30,yPos,(int)width + 30,(int)height* (graphs.size()+1));
+        for(int i =0; i<graphs.size(); i++) {
+            page.setColor(colors.get(i));
+            page.drawLine(xPos - (int)width - 30 + 5, yPos + 7 + (int)(height*(i+0.5)), xPos - (int)width - 5, yPos + 7 + (int)(height*(i+0.5)));
+            page.setColor(Color.BLACK);
+            page.drawString(graphs.get(i).title, xPos - (int)width, yPos + 7 + (int)height*(i+1));
+        }
     }
 
+    public JFrame getPlotFrame(int width, int height) {
+	WIDTH = width;
+	HEIGHT = height;
+        JFrame plotFrame = new JFrame("Plot Title");
+        plotFrame.setVisible(true);
+        plotFrame.setResizable(false);
+        plotFrame.setSize(width,height);
+        plotFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	JPanel drawPanel= new JPanel();
+	drawPanel.add(new DrawPanel());
+	plotFrame.getContentPane().add(BorderLayout.CENTER, drawPanel);
+	
+	return plotFrame;
+    }
+
+
+
+    class DrawPanel extends JPanel {
+        public void paintComponent(Graphics g) {
+            page = g;
+
+            //Make White background
+            page.setColor(Color.WHITE);
+            page.fillRect(0,0,WIDTH,HEIGHT);
+
+            //------Plot graph object-------
+            printGraph(page,WIDTH,HEIGHT);
+        }
+    }
 }
