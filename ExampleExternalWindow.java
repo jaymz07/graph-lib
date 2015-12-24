@@ -7,7 +7,7 @@ import javax.swing.event.*;
 import java.util.*;
 import java.io.*;
 
-public class Example implements MouseListener, MouseMotionListener, KeyListener {
+public class ExampleExternalWindow implements MouseListener, MouseMotionListener, KeyListener {
 
 //------------Window settings------------------------
     int width = 500, height = 500;
@@ -35,7 +35,7 @@ public class Example implements MouseListener, MouseMotionListener, KeyListener 
     public static void main(String[] args) {
         for(String s : args)
             System.out.println(s);
-        (new Example()).run() ;
+        (new ExampleExternalWindow()).run() ;
     }
 
     public void run() {

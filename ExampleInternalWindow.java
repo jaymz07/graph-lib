@@ -14,13 +14,12 @@ public class ExampleInternalWindow {
 
 //---------Generate Display points------------
     public void run() {
-      
       ArrayList<Graph> data = generateGraphs();
       MultiGraph finalGraph = (new MultiGraph(data)).setTitle("Some Sine Graphs");
       finalGraph.plotFrame(width,height);
-      
     }
-    //------------Make a set of plots to show on common axes----------------
+    
+//------------Make a set of plots to show on common axes----------------
     public ArrayList<Graph> generateGraphs() {
         ArrayList<Graph> graphs = new ArrayList<Graph>();
         graphs.add( (new Graph(generateSineGraph(0.5))).setPointSize(2).setColor(Color.BLACK).setTitle("A sine Graph!") 	);
@@ -29,7 +28,7 @@ public class ExampleInternalWindow {
         graphs.add(  new Graph(generateSineGraph(2.0)).setTitle("A sine Graph!")						);
         return graphs;
     }
-    //-----------Method for generating plot points----------
+//-----------Method for generating plot points----------
     public ArrayList<Point> generateSineGraph(double sineFreq)
     {
         ArrayList<Point> out = new ArrayList<Point>();
