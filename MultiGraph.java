@@ -324,28 +324,24 @@ public class MultiGraph
         plotFrame.setResizable(false);
         plotFrame.setSize(width,height);
         plotFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-	JLabel graphIcon = new JLabel(new ImageIcon(getPlotImage()));
-	JPanel graphPanel = new JPanel(new BorderLayout());
-	graphPanel.add(graphIcon, BorderLayout.CENTER);
-        plotFrame.getContentPane().add(graphIcon);
-	plotFrame.setVisible(true);
 
-        plotFrame.repaint();
+        JLabel graphIcon = new JLabel(new ImageIcon(getPlotImage()));
+        plotFrame.getContentPane().add(graphIcon);
+        plotFrame.setVisible(true);
 
         return plotFrame;
     }
-    
+
     public BufferedImage getPlotImage() {
-	BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
-	Graphics p = img.getGraphics();
+        BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics p = img.getGraphics();
 
-	//Make White background
-	p.setColor(Color.WHITE);
-	p.fillRect(0,0,WIDTH,HEIGHT);
+        //Make White background
+        p.setColor(Color.WHITE);
+        p.fillRect(0,0,WIDTH,HEIGHT);
 
-	//------Plot graph object-------
-	printGraph(p,WIDTH,HEIGHT);
-	 return img;
+        //------Plot graph object-------
+        printGraph(p,WIDTH,HEIGHT);
+        return img;
     }
 }
