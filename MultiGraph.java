@@ -317,19 +317,10 @@ public class MultiGraph
         return;
     }
 
-    public JFrame plotFrame(int width, int height) {
+    public GraphWindow plotFrame(int width, int height) {
         WIDTH = width;
         HEIGHT = height;
-        JFrame plotFrame = new JFrame(title);
-        plotFrame.setResizable(false);
-        plotFrame.setSize(width,height);
-        plotFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        JLabel graphIcon = new JLabel(new ImageIcon(getPlotImage()));
-        plotFrame.getContentPane().add(graphIcon);
-        plotFrame.setVisible(true);
-
-        return plotFrame;
+        return new GraphWindow(this, width, height);        
     }
 
     public BufferedImage getPlotImage() {
