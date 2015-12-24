@@ -9,7 +9,7 @@ public class MultiGraph
     //--Default parameters---------------
     public int pSize=1;
     public double margin = 0.1;
-    public double legendOpacity = 0.85;
+    public double legendOpacity = 0.85, legendMargin = 0.05;
     public int displayDigits = 1;
     public String title = "";
     //------------------------------------
@@ -20,7 +20,7 @@ public class MultiGraph
     public double minX, minY, maxX, maxY;
     public ArrayList<Graph> graphs;
 
-    private ArrayList<ArrayList<Point>> 	sPoints = null;
+    private ArrayList<ArrayList<Point>>  sPoints = null;
     private double tickIncrement = 0.1;
     private double rangeX=0, rangeY=0, ppuX=0, ppuY=0;
     private Graphics page;
@@ -134,20 +134,30 @@ public class MultiGraph
         for(int i=0; i<sPoints.size(); i++)
         {
             page.setColor(colors.get(i));
-            int x=(int)sPoints.get(i).get(0).getX(), y=(int)sPoints.get(i).get(0).getY();
-            pSize = graphs.get(i).pointSize;
+	    
+	    if(!graphs.get(i).shaded) {
+	      int x=(int)sPoints.get(i).get(0).getX(), y=(int)sPoints.get(i).get(0).getY();
+	      pSize = graphs.get(i).pointSize;
 
-            for(int j =0; j<sPoints.get(i).size(); j++)
-            {
-                Point p = sPoints.get(i).get(j);
-                if(pSize>1)
-		    drawPlotPoint((int)p.x, (int)p.y, graphs.get(i).pointStyle, pSize);
-                page.drawLine(x,y,(int)p.getX(),(int)p.getY());
-                x=(int)p.getX();
-                y=(int)p.getY();
-            }
+	      for(int j =0; j<sPoints.get(i).size(); j++)
+	      {
+		  Point p = sPoints.get(i).get(j);
+		  if(pSize>1)
+		      drawPlotPoint((int)p.x, (int)p.y, graphs.get(i).pointStyle, pSize);
+		  page.drawLine(x,y,(int)p.getX(),(int)p.getY());
+		  x=(int)p.getX();
+		  y=(int)p.getY();
+	      }
+	    }
+	    else {
+	      int [] xPoints = new int[sPoints.get(i).size()], yPoints = new int[sPoints.get(i).size()];
+	      for(int j =0; j<sPoints.get(i).size(); j++) {
+		xPoints[j] = (int)sPoints.get(i).get(j).x;
+		yPoints[j] = (int)sPoints.get(i).get(j).y;
+	      }
+	      page.fillPolygon(xPoints,yPoints,sPoints.size());
+	    }
         }
-
         drawAxes();
         drawLegend();
     }
@@ -271,7 +281,7 @@ public class MultiGraph
             height = font.getStringBounds(graphs.get(i).title,page).getHeight();
         }
         height += 7;
-        int xPos = (int)(0.9*WIDTH), yPos = (int)(0.1*HEIGHT);
+        int xPos = (int)((1.0-legendMargin)*WIDTH), yPos = (int)(legendMargin*HEIGHT);
         page.setColor(new Color(255,255,255,(int)(legendOpacity*255)));
         page.fillRect(xPos - (int)width - 30,yPos,(int)width + 30,(int)height* (graphs.size()+1));
         page.setColor(Color.BLACK);

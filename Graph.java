@@ -7,6 +7,7 @@ public class Graph {
   public ArrayList<Point> data;
   public String title;
   public PointType pointStyle;
+  public boolean shaded = false;
   
   public enum PointType { NONE, BOX, DOT }
   
