@@ -6,6 +6,9 @@ public class Graph {
   public Color  color;
   public ArrayList<Point> data;
   public String title;
+  public PointType pointStyle = PointType.BOX;
+  
+  public enum PointType { NONE, BOX, DOT }
   
   public Graph(ArrayList<Point> points) {
     data = points;
