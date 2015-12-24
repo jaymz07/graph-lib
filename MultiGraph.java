@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.applet.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class MultiGraph
@@ -334,13 +335,18 @@ public class MultiGraph
 
     class DrawPanel extends JPanel {
         private int width, height;
+	private BufferedImage img;
         public DrawPanel(int w, int h) {
             super();
             width = w;
             height = h;
+	    img = new BufferedImage(w,h,BufferedImage.TYPE_4BYTE_ABGR);
         }
         public void paintComponent(Graphics g) {
-            page = g;
+            //page = g;
+	    
+	    
+	    page = img.getGraphics();
 
             //Make White background
             page.setColor(Color.WHITE);
@@ -348,6 +354,9 @@ public class MultiGraph
 
             //------Plot graph object-------
             printGraph(page,height,height);
+	    
+	    g.drawImage(img,0,0,null);
+	    
         }
     }
 }
