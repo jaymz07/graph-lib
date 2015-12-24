@@ -275,25 +275,30 @@ public class MultiGraph
         plotFrame.setResizable(false);
         plotFrame.setSize(width,height);
         plotFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	JPanel drawPanel= new JPanel();
-	drawPanel.add(new DrawPanel());
-	plotFrame.getContentPane().add(BorderLayout.CENTER, drawPanel);
+	DrawPanel drawPanel = new DrawPanel(width,height);
+	plotFrame.getContentPane().add(drawPanel);
+	
+	plotFrame.repaint();
 	
 	return plotFrame;
     }
 
-
-
     class DrawPanel extends JPanel {
+	private int width, height;
+	public DrawPanel(int w, int h) {
+	  super();
+	  width = w;
+	  height = h;
+	}
         public void paintComponent(Graphics g) {
             page = g;
 
             //Make White background
             page.setColor(Color.WHITE);
-            page.fillRect(0,0,WIDTH,HEIGHT);
+            page.fillRect(0,0,width,height);
 
             //------Plot graph object-------
-            printGraph(page,WIDTH,HEIGHT);
+            printGraph(page,height,height);
         }
     }
 }
