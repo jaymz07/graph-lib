@@ -38,6 +38,11 @@ public class Point
 	{
 		y=a;
 	}
+	public void set(Point p)
+	{
+	      x = p.x;
+	      y = p.y;
+	}
 
 	public Color getColor()
 	{

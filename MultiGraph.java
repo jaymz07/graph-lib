@@ -24,8 +24,8 @@ public class MultiGraph
 
     private ArrayList<ArrayList<Point>>  sPoints = null;
     private double tickIncrement = 0.1;
-    private double rangeX=0, rangeY=0, ppuX=0, ppuY=0;
     private Graphics page;
+    public double rangeX=0, rangeY=0, ppuX=0, ppuY=0;
     public ArrayList<Color> 	colors = null;
     public ArrayList<Double> 	pointSizes = null;
 
@@ -67,6 +67,10 @@ public class MultiGraph
         minY = min_Y;
         sPoints = null;
         return this;
+    }
+    public MultiGraph resetPoints() {
+      sPoints = null;
+      return this;
     }
 
     public void findBounds() {
@@ -324,6 +328,7 @@ public class MultiGraph
     }
 
     public BufferedImage getPlotImage() {
+	setPlotParams();
         BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics p = img.getGraphics();
 

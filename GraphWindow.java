@@ -11,16 +11,18 @@ public class GraphWindow extends JFrame implements MouseListener, MouseMotionLis
 
     public MultiGraph graph;
     public int WIDTH, HEIGHT;
-
+    
+    Point mousePoint;
+    
     public GraphWindow(MultiGraph g, int width, int height) {
         super(g.title);
         graph = g;
         WIDTH = width;
-        height = height;
+        HEIGHT = height;
 
         setResizable(false);
         setSize(width,height);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel graphIcon = new JLabel(new ImageIcon(graph.getPlotImage()));
         getContentPane().add(graphIcon);
@@ -29,6 +31,24 @@ public class GraphWindow extends JFrame implements MouseListener, MouseMotionLis
 	addMouseListener(this);
         addMouseMotionListener( this );
         addKeyListener ( this ) ;
+	
+	repaint();
+    }
+    
+    public void shiftGraphViewPx(Point p) {
+	double unitsX = -p.x*(graph.maxX-graph.minX)/WIDTH, unitsY = p.y*(graph.maxY-graph.minY)/HEIGHT;
+	graph.minX+= unitsX;
+	graph.maxX+= unitsX;
+	graph.minY+= unitsY;
+	graph.maxY+= unitsY;
+    }
+    
+    public void updateGraph() {
+	graph.resetPoints();
+	JLabel graphIcon = new JLabel(new ImageIcon(graph.getPlotImage()));
+	getContentPane().remove(0);
+        getContentPane().add(graphIcon);
+	revalidate();
     }
 
     /*----------Keyboard Input. Event generated function calls.----------------------*/
@@ -48,12 +68,17 @@ public class GraphWindow extends JFrame implements MouseListener, MouseMotionLis
     public void mousePressed( MouseEvent e ) {  // called after a button is pressed down
         int xP=e.getX();
         int yP=e.getY();
-	System.out.println(new Point(xP,yP));
+	mousePoint = new Point(xP,yP);
+	
+	
     }
     public void mouseReleased( MouseEvent e ) {}  // called after a button is released
     public void mouseMoved( MouseEvent e )    {}  // called during motion when no buttons are down
     public void mouseDragged( MouseEvent e )  {   // called during motion with buttons down
-        int xP=e.getX();
-        int yP=e.getY();
+        int xP=e.getX() - (int)mousePoint.x;
+        int yP=e.getY() - (int)mousePoint.y;
+	shiftGraphViewPx(new Point(xP,yP));
+	mousePoint = new Point(e.getX(),e.getY());
+	updateGraph();
     }
 }
