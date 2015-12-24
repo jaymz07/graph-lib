@@ -14,6 +14,7 @@ public class MultiGraph
     public double minX, minY, maxX, maxY;
     public double tickIncrement = 0.1;
     public int displayDigits = 1;
+    public String title = "";
 
     private double rangeX=0, rangeY=0, ppuX=0, ppuY=0;
     private Graphics page;
@@ -29,6 +30,10 @@ public class MultiGraph
     }
 
     //------------Object builder patterns-------------
+    public MultiGraph setTitle(String plotTitle) {
+      title = plotTitle;
+      return this;
+    }
     public MultiGraph setMaxX(double max_X) {
         maxX = max_X;
         sPoints = null;
@@ -267,10 +272,10 @@ public class MultiGraph
         }
     }
 
-    public JFrame getPlotFrame(int width, int height) {
+    public JFrame plotFrame(int width, int height) {
 	WIDTH = width;
 	HEIGHT = height;
-        JFrame plotFrame = new JFrame("Plot Title");
+        JFrame plotFrame = new JFrame(title);
         plotFrame.setVisible(true);
         plotFrame.setResizable(false);
         plotFrame.setSize(width,height);
