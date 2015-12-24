@@ -321,42 +321,31 @@ public class MultiGraph
         WIDTH = width;
         HEIGHT = height;
         JFrame plotFrame = new JFrame(title);
-        plotFrame.setVisible(true);
         plotFrame.setResizable(false);
         plotFrame.setSize(width,height);
         plotFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DrawPanel drawPanel = new DrawPanel(width,height);
-        plotFrame.getContentPane().add(drawPanel);
+        
+	JLabel graphIcon = new JLabel(new ImageIcon(getPlotImage()));
+	JPanel graphPanel = new JPanel(new BorderLayout());
+	graphPanel.add(graphIcon, BorderLayout.CENTER);
+        plotFrame.getContentPane().add(graphIcon);
+	plotFrame.setVisible(true);
 
         plotFrame.repaint();
 
         return plotFrame;
     }
+    
+    public BufferedImage getPlotImage() {
+	BufferedImage img = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_4BYTE_ABGR);
+	Graphics p = img.getGraphics();
 
-    class DrawPanel extends JPanel {
-        private int width, height;
-	private BufferedImage img;
-        public DrawPanel(int w, int h) {
-            super();
-            width = w;
-            height = h;
-	    img = new BufferedImage(w,h,BufferedImage.TYPE_4BYTE_ABGR);
-        }
-        public void paintComponent(Graphics g) {
-            //page = g;
-	    
-	    
-	    page = img.getGraphics();
+	//Make White background
+	p.setColor(Color.WHITE);
+	p.fillRect(0,0,WIDTH,HEIGHT);
 
-            //Make White background
-            page.setColor(Color.WHITE);
-            page.fillRect(0,0,width,height);
-
-            //------Plot graph object-------
-            printGraph(page,height,height);
-	    
-	    g.drawImage(img,0,0,null);
-	    
-        }
+	//------Plot graph object-------
+	printGraph(p,WIDTH,HEIGHT);
+	 return img;
     }
 }
